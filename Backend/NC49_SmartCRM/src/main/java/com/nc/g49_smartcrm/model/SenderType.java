@@ -1,4 +1,4 @@
-package com.crishof.nc49_smartcrm.model;
+package com.nc.g49_smartcrm.model;
 
 public enum SenderType {
 

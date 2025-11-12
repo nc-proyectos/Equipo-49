@@ -1,4 +1,4 @@
-package com.crishof.nc49_smartcrm;
+package com.nc.g49_smartcrm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
