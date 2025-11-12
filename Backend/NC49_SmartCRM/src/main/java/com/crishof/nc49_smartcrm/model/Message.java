@@ -28,11 +28,14 @@ public class Message {
 
     private Long senderId;
 
+    @Enumerated(EnumType.STRING)
+    private MessageDirection direction;
+
     @Lob
     private String body;
 
     @Enumerated(EnumType.STRING)
     private MessageStatus messageStatus;
 
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 }

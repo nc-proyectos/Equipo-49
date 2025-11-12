@@ -22,16 +22,19 @@ public class Conversation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contact_id", nullable = false)
     private Contact contact;
 
     @Enumerated(EnumType.STRING)
     private Channel channel;
 
+    private String externalThreadId;
+
     private Instant lastMessageAt;
 
     private int unreadMessages = 0;
 
-    @OneToMany
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 
 }
