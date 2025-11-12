@@ -1,0 +1,7 @@
+package com.nc.g49_smartcrm.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class ContactServiceImpl implements ContactService {
+}
