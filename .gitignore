@@ -1,0 +1,35 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs / editores
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# --- Backend (Java / Maven / Gradle) ---
+/backend/target/
+/backend/.gradle/
+/backend/build/
+/backend/out/
+
+# --- Frontend (Node / React / Angular) ---
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+/frontend/.next/
+/frontend/.nuxt/
+/frontend/.angular/
+
+# --- General ---
+*.class
+*.jar
+*.war
+*.ear
+
+# Entornos virtuales o temporales
+tmp/
+.env
