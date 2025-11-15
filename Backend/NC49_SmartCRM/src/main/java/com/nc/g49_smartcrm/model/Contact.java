@@ -20,20 +20,33 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "firstname", nullable = false, length = 100)
     private String firstname;
+
+    @Column(name = "lastname", nullable = false, length = 100)
     private String lastname;
+
+    @Column(name = "email", length = 150, unique = true)
     private String email;
+
+    @Column(name = "phone", length = 50)
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    private ContactStatus contactStatus;
+    @Column(name = "status", nullable = false, length = 50)
+    private ContactStatus status;
 
     @Enumerated(EnumType.STRING)
-    private ContactSource contactSource;
+    @Column(name = "source", length = 50)
+    private ContactSource source;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
+    @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 }
