@@ -11,11 +11,11 @@ Thumbs.db
 *.log
 
 # --- Backend (Java / Maven / Gradle) ---
-/backend/target/
-/backend/.gradle/
-/backend/build/
-/backend/out/
-
+Backend/NC49_SmartCRM/target/
+Backend/NC49_SmartCRM/.gradle/
+Backend/NC49_SmartCRM/build/
+Backend/NC49_SmartCRM/out/
+**/target/
 # --- Frontend (Node / React / Angular) ---
 /frontend/node_modules/
 /frontend/build/
