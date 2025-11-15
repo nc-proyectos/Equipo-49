@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "8e7bb37a-85fc-431b-9718-8e88c84ab08f",
+		"name": "SmartCRM - API",
+		"description": "Colección Postman para probar la API\n\ndel SmartCRM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24959813"
+	},
+	"item": [
+		{
+			"name": "API - Contacts",
+			"item": [
+				{
+					"name": "Get All Contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/contact/getAll",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"contact",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/contact/getById/{{CONTACT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"contact",
+								"getById",
+								"{{CONTACT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\": \"Ana\",\n    \"lastname\": \"García\",\n    \"email\": \"ana@gmail.com\",\n    \"phone\": \"+549117777777\",\n    \"contactStatus\": \"LEAD_ACTIVE\",\n    \"contactSource\": \"WHATSAPP\",\n    \"ownerId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/contact/save",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"contact",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Contact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\": \"Ana\",\n    \"lastname\": \"García\",\n    \"email\": \"ana_updated@gmail.com\",\n    \"phone\": \"+549118888888\",\n    \"contactStatus\": \"FOLLOW_UP\",\n    \"contactSource\": \"EMAIL\",\n    \"ownerId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/contact/update/{{CONTACT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"contact",
+								"update",
+								"{{CONTACT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contact",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/contact/delete/{{CONTACT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"contact",
+								"delete",
+								"{{CONTACT_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "CONTACT_ID",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
