@@ -12,7 +12,7 @@ import java.time.Instant;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<Object> buildErrorResponse(
+    private ResponseEntity<ErrorResponse> buildErrorResponse(
             HttpStatus status,
             String message,
             String path
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationErrors(
+    public ResponseEntity<ErrorResponse> handleValidationErrors(
             MethodArgumentNotValidException ex,
             HttpServletRequest request
     ) {
@@ -51,9 +51,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ContactNotFoundException.class)
-    public ResponseEntity<Object> handleContactNotFound(
-            ContactNotFoundException ex,
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(
+            ResourceNotFoundException ex,
             HttpServletRequest request
     ) {
         return buildErrorResponse(
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgument(
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
             IllegalArgumentException ex,
             HttpServletRequest request
     ) {
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGenericException(
+    public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex,
             HttpServletRequest request
     ) {
