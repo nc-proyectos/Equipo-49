@@ -34,7 +34,23 @@ public class Conversation {
 
     private int unreadMessages = 0;
 
+    private String subject;
+
+    @Column(name = "closed_at")
+    private Instant closedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ConversationStatus status;
+
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private Instant createdAt;
+    private Instant updatedAt;
 
 }
