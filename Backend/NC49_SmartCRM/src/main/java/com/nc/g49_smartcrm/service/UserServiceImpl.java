@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(id);
         }
         //TODO delete conversations and messages
-        //TODO set owner id to another user
+        //TODO set owner id to another user??
 
         userRepository.deleteById(id);
     }
