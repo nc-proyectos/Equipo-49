@@ -1,4 +1,31 @@
 package com.nc.g49_smartcrm.controller;
 
+import com.nc.g49_smartcrm.service.WhatsAppService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/message")
+@RequiredArgsConstructor
 public class MessageController {
+
+    private final WhatsAppService whatsAppService;
+
+    //end point para que twilio envie los mensajes y el backend los reciba.
+    @PostMapping("/whatsapp")
+    @ResponseStatus(HttpStatus.OK)
+    public String recibirMensaje(@RequestParam Map<String, String> datos){
+        return whatsAppService.recibirMensaje(datos);
+    }
+
+    //end point para responder al cliente por whatsapp.
+    @PostMapping("/responder")
+    @ResponseStatus(HttpStatus.OK)
+    public String enviarMensaje(@RequestParam String numero, @RequestParam String mensaje){
+        whatsAppService.enviarMensaje(numero,mensaje);
+        return "Mensaje enviado con exito";
+    }
 }
