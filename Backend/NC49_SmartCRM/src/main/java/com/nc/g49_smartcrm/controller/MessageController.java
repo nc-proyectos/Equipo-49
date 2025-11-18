@@ -13,7 +13,7 @@ import java.util.Map;
 public class MessageController {
 
     private final WhatsAppService whatsAppService;
-
+    private final MessageService messageService;
     //end point para que twilio envie los mensajes y el backend los reciba.
     @PostMapping("/whatsapp")
     @ResponseStatus(HttpStatus.OK)
@@ -27,5 +27,10 @@ public class MessageController {
     public String enviarMensaje(@RequestParam String numero, @RequestParam String mensaje){
         whatsAppService.enviarMensaje(numero,mensaje);
         return "Mensaje enviado con exito";
+    }
+
+    @GetMapping("/getById/{id}")
+    public MessageResponse getById(@PathVariable Long id) {
+        return messageService.getById(id);
     }
 }
