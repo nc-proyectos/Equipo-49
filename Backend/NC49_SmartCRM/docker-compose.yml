@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_LOCAL_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_LOCAL_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_LOCAL_DB}
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: ./
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_data:
