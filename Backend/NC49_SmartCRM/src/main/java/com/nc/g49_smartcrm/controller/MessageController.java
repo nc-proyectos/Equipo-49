@@ -1,5 +1,7 @@
 package com.nc.g49_smartcrm.controller;
 
+import com.nc.g49_smartcrm.dto.MessageResponse;
+import com.nc.g49_smartcrm.service.MessageService;
 import com.nc.g49_smartcrm.service.WhatsAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ public class MessageController {
 
     private final WhatsAppService whatsAppService;
     private final MessageService messageService;
+
     //end point para que twilio envie los mensajes y el backend los reciba.
     @PostMapping("/whatsapp")
     @ResponseStatus(HttpStatus.OK)
