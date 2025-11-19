@@ -26,7 +26,6 @@ const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  marginLeft: '28rem',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
