@@ -26,10 +26,7 @@ export default function App() {
         <Route path="/analiticas" element={<Analiticas />} />
     </Routes>
     </div>
-    
-   
-    
-       
+
   );
 }
 
