@@ -10,5 +10,4 @@ public interface ConversationMapper {
 
     ConversationResponse toDto(Conversation conversation);
 
-
 }

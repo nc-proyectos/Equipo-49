@@ -3,6 +3,7 @@ package com.nc.g49_smartcrm.service;
 import com.nc.g49_smartcrm.dto.ContactRequest;
 import com.nc.g49_smartcrm.dto.ContactResponse;
 import com.nc.g49_smartcrm.exception.ContactNotFoundException;
+import com.nc.g49_smartcrm.exception.PhoneNotFoundException;
 import com.nc.g49_smartcrm.mapper.ContactMapper;
 import com.nc.g49_smartcrm.model.Contact;
 import com.nc.g49_smartcrm.repository.ContactRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -64,5 +66,23 @@ public class ContactServiceImpl implements ContactService {
         //TODO delete conversations and messages
 
         contactRepository.deleteById(id);
+    }
+    @Override
+    public ContactResponse findByPhoneOrCreateNewContact(String phone,ContactRequest request) {
+
+        Contact contact= contactRepository.findByPhone(phone)
+                .orElseGet(()->contactRepository.save(Contact.builder()
+                        .firstname(request.getFirstname())
+                        .lastname(request.getLastname())
+                        .email(request.getEmail())
+                        .phone(request.getPhone())
+                        .status(request.getStatus())
+                        .source(request.getSource())
+                        .createdAt(Instant.now())
+                        .updatedAt(Instant.now())
+                        .build()
+                ));
+
+        return contactMapper.toDto(contact);
     }
 }

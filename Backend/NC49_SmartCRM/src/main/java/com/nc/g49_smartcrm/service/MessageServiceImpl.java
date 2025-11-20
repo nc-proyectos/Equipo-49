@@ -1,13 +1,12 @@
 package com.nc.g49_smartcrm.service;
 
-import com.nc.g49_smartcrm.dto.MessageRequest;
-import com.nc.g49_smartcrm.dto.MessageResponse;
+import com.nc.g49_smartcrm.dto.*;
 import com.nc.g49_smartcrm.exception.MessageNotFoundException;
 import com.nc.g49_smartcrm.mapper.MessageMapper;
-import com.nc.g49_smartcrm.model.Conversation;
-import com.nc.g49_smartcrm.model.Message;
+import com.nc.g49_smartcrm.model.*;
 import com.nc.g49_smartcrm.repository.ConversationRepository;
 import com.nc.g49_smartcrm.repository.MessageRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,8 @@ public class MessageServiceImpl implements MessageService {
     private MessageRepository messageRepository;
     private ConversationRepository conversationRepository;
     private MessageMapper messageMapper;
+    private ConversationService conversationService;
+    private ContactService contactService;
 
     @Override
     public MessageResponse getById(Long id) {
@@ -45,5 +46,43 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageResponse> getMessages(Long conversationId) {
         return List.of();
+    }
+
+    @Transactional
+    @Override
+    public MessageResponse saveMessage(InboundMessage inboundMessage){
+
+        //verifica si existe el contacto si no crea uno nuevo.
+        ContactResponse contact=contactService
+                .findByPhoneOrCreateNewContact(inboundMessage.phone(),
+                        new ContactRequest(
+                                inboundMessage.firstName(),
+                                inboundMessage.lastName(),
+                                inboundMessage.email(),
+                                inboundMessage.phone(),
+                                ContactStatus.CLIENT,
+                                inboundMessage.contactSource(),
+                                1L
+                        ));
+
+        //verifica si hay una conversacion abierta o inicia una nueva.
+        ConversationResponse conversation=conversationService
+                .findByContactPhoneOrStartNewConversation(inboundMessage.phone(),
+                        new ConversationStartRequest(
+                                1L,
+                                "subject",
+                                contact.getId(),
+                                inboundMessage.channel(),
+                                inboundMessage.message()
+                        )
+                );
+
+        MessageRequest messageRequest=new MessageRequest(
+                contact.getId(),
+                inboundMessage.senderType(),
+                inboundMessage.message()
+        );
+
+        return addMessage(conversation.getId(),messageRequest);
     }
 }
