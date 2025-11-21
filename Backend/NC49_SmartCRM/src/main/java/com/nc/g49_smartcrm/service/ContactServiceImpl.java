@@ -69,7 +69,7 @@ public class ContactServiceImpl implements ContactService {
     }
     @Override
     public ContactResponse findByPhoneOrCreateNewContact(String phone,ContactRequest request) {
-
+        //falta el owner
         Contact contact= contactRepository.findByPhone(phone)
                 .orElseGet(()->contactRepository.save(Contact.builder()
                         .firstname(request.getFirstname())

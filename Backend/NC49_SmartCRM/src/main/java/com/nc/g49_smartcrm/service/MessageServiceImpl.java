@@ -62,14 +62,14 @@ public class MessageServiceImpl implements MessageService {
                                 inboundMessage.phone(),
                                 ContactStatus.CLIENT,
                                 inboundMessage.contactSource(),
-                                1L
+                                inboundMessage.userId()
                         ));
 
         //verifica si hay una conversacion abierta o inicia una nueva.
         ConversationResponse conversation=conversationService
                 .findByContactPhoneOrStartNewConversation(inboundMessage.phone(),
                         new ConversationStartRequest(
-                                1L,
+                                inboundMessage.userId(),
                                 "subject",
                                 contact.getId(),
                                 inboundMessage.channel(),

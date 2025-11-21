@@ -14,6 +14,7 @@ public record InboundMessage(
         String lastName,
         String phone,
         String email,
-        String message
+        String message,
+        Long userId
 ) {
 }
