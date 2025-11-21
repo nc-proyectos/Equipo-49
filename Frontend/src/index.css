@@ -1,29 +1,5 @@
 
-.informacion {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
 
-.cuadro {
-  padding: 3%;
-  border-style: groove;
-  border-radius: 6%;
-}
-
-.porcentaje {
-  display: flex;
-}
-
-.porcentaje p {
-  margin: 3%;
-  margin-left: 52%;
-  background-color: greenyellow;
-}
-
-p {
-  font-family: sans-serif
-}
 
 
 

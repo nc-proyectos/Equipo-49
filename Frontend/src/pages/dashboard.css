@@ -1,0 +1,76 @@
+.informacion {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.cuadro {
+  padding: 3%;
+  border-style: groove;
+  border-radius: 6%;
+}
+
+.cuadro p {
+  margin-top: 14px;
+}
+
+.porcentaje {
+  display: flex;
+}
+
+.porcentaje p {
+  margin: -3%;
+  margin-left: 52%;
+  background-color: greenyellow;
+  padding: 5%;
+  border-radius: 12%;
+}
+
+p {
+  font-family: sans-serif;
+  margin-top: 14px;
+  margin-bottom: 1rem;
+}
+
+.porcentaje1 {
+    display: flex;
+}
+
+.porcentaje1 p{
+    margin: -3%;
+    margin-left: 33%;
+    background-color: greenyellow;
+    padding: 5%;
+    border-radius: 12%;
+}
+
+.dosCuadros {
+  display: flex;
+  justify-content: space-around;
+  height: 40%;
+  margin: 5%;
+}
+
+.dosCuadros1 {
+  display: flex;
+  border: groove;
+  padding: unset;
+  width: 79%;
+  margin-right: 12%;
+  border-radius: 2%;
+}
+
+.dosCuadros2 {
+  display: flex;
+  border: groove;
+  width: 76%;
+  border-radius: 2%;
+}
+
+.icono1 {
+  margin-left: 12rem;
+}
+
+.icono2 {
+  margin-left: 12rem;
+}
