@@ -68,9 +68,25 @@ p {
 }
 
 .icono1 {
-  margin-left: 12rem;
+  margin-left: 63%;
 }
 
 .icono2 {
-  margin-left: 12rem;
+  margin-left: 80%;
+}
+
+.dosCuadros h3 {
+  margin-left: 2%
+}
+
+.conversaciones {
+  display: flex;
+}
+
+.conversacionesRecientes {
+  display: flex;
+}
+
+.recordatorios {
+  display: flex;
 }
