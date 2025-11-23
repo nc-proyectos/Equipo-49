@@ -11,7 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 //import Box from '@mui/material/Box';
-//import  DataGrid  from '@mui/x-data-grid';
+import  { DataGrid }  from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function Dashboard() {
@@ -88,24 +88,104 @@ export default function Dashboard() {
           <MoreHorizIcon className='icono2'/>
         </article>
       </div>
-      <div>
-        <Box sx={{ height: 250, width: '100%' }}>
+      <div className='contenedorInformacion'>
+        <div style={{ height: 250, width: '46%' , marginLeft: '5%', border: 'groove' , borderRadius: '2%' }}>
+        <div
+          style={{
+            display:'flex',
+            justifyContent: 'space-between',
+            marginBottom:'8px',
+            fontWeight: 'bold'
+          }}>
+            <p>Conversaciones</p>
+            <span>Ver todos</span>
+        </div>
         <DataGrid
-        columns={[{ field: 'username' }, { field: 'age' }]}
-        rows={[
-          {
-            id: 1,
-            username: '@MUI',
-            age: 20,
+          sx={{
+              "& .MuiDataGrid-columnHeaders": {
+              display: "none"
+            }
+          }}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          rows={[]}
+          columns={[
+          { 
+          field: "a", 
+          headerName: "Conversaciones", 
+          width: 200,
+          sortable: false,
+          renderCell: () => "Recordatorios"
           },
-        ]}
-      />
-    </Box>
-
+          {field: "b", 
+          headerName: "", 
+          width: 150,
+          sortable: false,
+          renderCell: () => (
+            <div style={{marginLeft: '60%'}}>
+              Ver todos
+            </div>
+            ) 
+          }
+          ]}
+          hideFooter
+          localeText={{
+            noRowsLabel: "No hay informacion disponible"
+          }}
+        />
+      </div>
+      <div style={{ height: 250, width: '30%' , marginLeft: '9%' , border: 'groove' , borderRadius: '2%' }}>
+        <div
+          style={{
+            display:'flex',
+            justifyContent: 'space-between',
+            marginBottom:'8px',
+            fontWeight: 'bold'
+          }}>
+            <p>Reuniones</p>
+            <AddIcon/>
+        </div>
+        <DataGrid
+          sx={{
+              "& .MuiDataGrid-columnHeaders": {
+              display: "none"
+            }
+          }}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          rows={[]}
+          columns={[
+        { 
+          field: "a", 
+          headerName: "Reuniones", 
+          width: 200,
+          sortable: false,
+          renderCell: () => "Reuniones"
+          },
+          
+        
+          {field: "b", 
+          headerName: "", 
+          width: 95,
+          marginLeft: 200,
+          sortable: false,
+          }
+          
+          ]}
+          hideFooter
+          localeText={{
+            noRowsLabel: "No hay informacion disponible"
+          }}
+          />
+        </div>
       </div>
     </>
   )
 }
+/*
+<div style= {{marginLeft: '88%'}}>
+            <AddIcon/>
+          </div>
 /*
 <div className='conversaciones'>
           <article>

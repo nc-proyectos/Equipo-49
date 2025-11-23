@@ -79,14 +79,11 @@ p {
   margin-left: 2%
 }
 
-.conversaciones {
-  display: flex;
+.reuniones1 {
+  margin-left: 20%;
+  width: 0%;
 }
 
-.conversacionesRecientes {
-  display: flex;
-}
-
-.recordatorios {
+.contenedorInformacion {
   display: flex;
 }
