@@ -1,0 +1,12 @@
+.navlink {
+    display: flex;
+    text-decoration: none;
+    margin-top: 10%;
+    color: black;
+}
+
+.logoEmail h1 {
+    font-weight: bold;
+    background-color: dodgerblue;
+    color: white;
+}
