@@ -13,7 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "tasks")
+@Table(name = "tbl_tasks")
 public class Task {
 
     @Id
