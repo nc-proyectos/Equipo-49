@@ -27,6 +27,7 @@ public class MessageController {
 
         return whatsAppService.verifyUrl(mode,challenge,token);
     }
+
     //el end point q recibe los mensajes desde la api de wpp.
     @PostMapping("/whatsapp")
     @ResponseStatus(HttpStatus.OK)

@@ -134,7 +134,7 @@ public class WhatsAppServiceImpl implements WhatsAppService{
         // Intenta parsear el número (Argentina como fallback si no se sabe)
         Phonenumber.PhoneNumber number = util.parse(raw, "AR");
 
-        // Si el número es válido → devolver en E.164
+        // Si el número es válido  devolver en E.164
         if (util.isValidNumber(number)) {
             return util.format(number, PhoneNumberUtil.PhoneNumberFormat.E164);
         }
