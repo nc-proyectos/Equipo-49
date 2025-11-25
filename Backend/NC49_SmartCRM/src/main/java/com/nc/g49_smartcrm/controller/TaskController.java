@@ -1,6 +1,5 @@
 package com.nc.g49_smartcrm.controller;
 
-
 import com.nc.g49_smartcrm.dto.TaskRequest;
 import com.nc.g49_smartcrm.dto.TaskResponse;
 import com.nc.g49_smartcrm.service.TaskService;
@@ -36,6 +35,5 @@ public class TaskController {
     @PutMapping("/complete/{id}")
     public ResponseEntity<TaskResponse> complete(@PathVariable Long id) {
         return ResponseEntity.ok(service.completeTask(id));
-
     }
 }

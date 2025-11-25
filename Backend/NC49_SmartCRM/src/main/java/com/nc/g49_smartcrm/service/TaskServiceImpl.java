@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -24,11 +26,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse createTask(TaskRequest taskRequest) {
 
-        Task task = taskMapper.toEntity(taskRequest);
+        //TODO set UTC to LOCAL
+        Instant localReminderAt = taskRequest.getReminderAt().minus(Duration.ofHours(1));
 
+        taskRequest.setReminderAt(localReminderAt);
+        Task task = taskMapper.toEntity(taskRequest);
+        task.setCreatedAt(Instant.now());
+        //TODO set user
+        task.setUserId(1L);
+        task.setStatus(Task.Status.PENDING);
         Task saved = taskRepository.save(task);
 
-        //TODO Encolar job en BullMQ
         queueClient.enqueueReminder(saved.getId(), saved.getUserId(), saved.getReminderAt());
 
         return taskMapper.toDto(saved);
@@ -46,17 +54,12 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
         task.setStatus(Task.Status.COMPLETED);
         Task saved = taskRepository.save(task);
-
-        //TODO reminder
-        queueClient.enqueueReminder(saved.getId(), saved.getUserId(), saved.getReminderAt());
-
         return taskMapper.toDto(saved);
     }
 
     @Override
     public TaskResponse findById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-
         return taskMapper.toDto(task);
     }
 }
