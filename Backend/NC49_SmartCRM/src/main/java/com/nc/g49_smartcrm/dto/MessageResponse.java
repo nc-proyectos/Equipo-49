@@ -9,6 +9,6 @@ public class MessageResponse {
 
     private Long id;
     private String content;
-    private String sender;
+    private SenderResponse sender;
     private Instant createdAt;
 }

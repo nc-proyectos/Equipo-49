@@ -15,4 +15,6 @@ public interface ConversationService {
 
     @Transactional
     ConversationResponse closeConversation(Long id);
+
+    ConversationResponse findByContactPhoneOrStartNewConversation(String phoneNumber,ConversationStartRequest request);
 }
