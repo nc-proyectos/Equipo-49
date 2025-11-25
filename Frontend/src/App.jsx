@@ -10,6 +10,9 @@ import Correos from "./pages/correo/Correos";
 import Segmentacion from "./pages/Segmentacion";
 import Recordatorios from "./pages/Recordatorios";
 import Analiticas from "./pages/Analiticas";
+import EnviarMensaje from "./pages/correo/enviarMensaje";
+import BandejaDeEntrada from "./pages/correo/BandejaDeEntrada";
+
 
 export default function App() {
   return (
@@ -23,7 +26,8 @@ export default function App() {
         <div className="flex-grow-1 p-4">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/enviarMensajes" element={<EnviarMensaje/>}></Route>
+            <Route path="/enviarMensaje" element={<EnviarMensaje/>}/>
+            <Route path="/bandejaDeEntrada" element={<BandejaDeEntrada/>}></Route>
             <Route path="/contactos" element={<Contactos />} />
             <Route path="/whatsapp" element={<Whatsapp />} />
             <Route path="/correos" element={<Correos />} />
@@ -36,6 +40,6 @@ export default function App() {
       </div>
     )
 }
-
+//<Route path="/enviarMensajes" element={<EnviarMensaje/>}/>
 
 

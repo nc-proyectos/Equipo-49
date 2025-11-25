@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -26,10 +26,12 @@ import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import IconButton from '@mui/material/IconButton';
-
+import EnviarMensaje from './enviarMensaje';
+import BandejaDeEntrada from './BandejaDeEntrada';
+import CorreoNoDeseado from './CorreoNoDeseado';
 import { NavLink } from 'react-router-dom';
-
 import "./correos.css";
+;
 
 const drawerWidth = 240;
 
@@ -77,7 +79,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Correos() {
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -174,6 +176,20 @@ export default function Correos() {
     </Menu>
   );
 
+  const [plantilla , setPlantilla] = useState(null);
+
+  const handleClick = () => {
+    setPlantilla("Enviar")
+  }
+
+  const handleClick1 = () => {
+    setPlantilla("Bandeja")
+  }
+
+  const handleClick2 = () =>{
+    setPlantilla("No deseado")
+  }
+
 
     return (
       <>
@@ -265,13 +281,16 @@ export default function Correos() {
         <Toolbar />
         <Divider />
         <List>
-          <NavLink className='navlink' to='/enviarMensajes'><MoveToInboxIcon/>Enviar mensajes</NavLink>
-          <NavLink className='navlink' to='/bandejaDeEntrada'><EmailIcon/>Bandeja de Entrada</NavLink>
-          <NavLink className='navlink' to='/correoNoDeseado'><MoveToInboxIcon/>Correo no deseado</NavLink>
+          <div className='navlink' onClick={handleClick}><MoveToInboxIcon/>Enviar mensajes</div>
+          <div className='navlink' onClick={handleClick1}><EmailIcon/>Bandeja de Entrada</div>
+          <div className='navlink' onClick={handleClick2}><MoveToInboxIcon/>Correo no deseado</div>
           <NavLink className='navlink' to='/ElementosEliminados'><EmailIcon/>Elementos eliminados</NavLink>
         </List>
         <Divider />
       </Drawer>
+      {plantilla === "Enviar" && <EnviarMensaje/>}
+      {plantilla === "Bandeja" && <BandejaDeEntrada/>}
+      {plantilla === "No deseado" && <CorreoNoDeseado/>}
       </>
     )
 }
