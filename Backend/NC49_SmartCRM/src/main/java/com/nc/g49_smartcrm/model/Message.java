@@ -31,7 +31,6 @@ public class Message {
     @Enumerated(EnumType.STRING)
     private MessageDirection direction;
 
-    @Lob
     private String body;
 
     @Enumerated(EnumType.STRING)

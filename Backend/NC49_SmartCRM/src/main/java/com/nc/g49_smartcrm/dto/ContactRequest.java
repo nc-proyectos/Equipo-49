@@ -4,9 +4,11 @@ import com.nc.g49_smartcrm.model.ContactSource;
 import com.nc.g49_smartcrm.model.ContactStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ContactRequest {
 
     @NotBlank(message = "Firstname is required")
