@@ -1,6 +1,9 @@
-import { Queue } from "bullmq";
-import { redisConnection } from "./redis.js";
+import pkg from "bullmq";
+const { Queue } = pkg;
 
-export const reminderQueue = new Queue("task-reminders", {
-  connection: redisConnection,
+export const reminderQueue = new Queue("reminders", {
+  connection: {
+    host: process.env.REDIS_HOST,
+    port: 6379,
+  },
 });

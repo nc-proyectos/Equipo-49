@@ -1,29 +1,30 @@
-import { Worker } from "bullmq";
-import axios from "axios";
-import { redisConnection } from "./redis.js";
-import { config } from "./config.js";
+import pkg from "bullmq";
+const { Worker } = pkg;
 
 const worker = new Worker(
-  "task-reminders",
+  "reminders",
   async (job) => {
-    console.log("Job ejecutado:", job.data);
+    console.log("Received job:", job.id, job.data);
 
-    const { taskId } = job.data;
-
-    // Llamar al Backend Spring para disparar el WebSocket
-    await axios.post(
-      `${config.SPRING_BASE_URL}/internal/tasks/${taskId}/trigger`
+    await fetch(
+      `${process.env.SPRING_BASE_URL}/internal/task/notify/${job.id}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(job.data),
+      }
     );
+
+    console.log("Processed job:", job.id);
   },
   {
-    connection: redisConnection,
+    connection: {
+      host: process.env.REDIS_HOST,
+      port: 6379,
+    },
   }
 );
 
-worker.on("completed", (job) => {
-  console.log("Recordatorio enviado, Job:", job.id);
-});
-
-worker.on("failed", (job, err) => {
-  console.error("Job falló:", job.id, err);
-});
+worker.on("ready", () => console.log("Worker ready and connected to Redis"));
+worker.on("failed", (job, err) => console.error("Job failed", job.id, err));
+worker.on("completed", (job) => console.log("Job completed", job.id));
