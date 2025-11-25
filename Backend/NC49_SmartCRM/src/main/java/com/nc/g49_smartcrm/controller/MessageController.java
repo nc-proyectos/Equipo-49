@@ -31,15 +31,15 @@ public class MessageController {
     //el end point q recibe los mensajes desde la api de wpp.
     @PostMapping("/whatsapp")
     @ResponseStatus(HttpStatus.OK)
-    public String recibirMensaje(@RequestParam Map<String, String> datos) {
-        return whatsAppService.recibirMensaje(datos);
+    public void receiveMessage(@RequestBody WhatsAppWebhook webhook) {
+        whatsAppService.receiveMessage(webhook);
     }
 
     @PostMapping("/responder")
     @ResponseStatus(HttpStatus.OK)
-    public String enviarMensaje(@RequestParam String numero, @RequestParam String mensaje) {
-        whatsAppService.enviarMensaje(numero, mensaje);
-        return "Mensaje enviado con exito";
+    public String enviarMensaje(@RequestParam String numero, @RequestParam String mensaje) throws NumberParseException {
+        whatsAppService.sendTextMessage(numero,mensaje);
+        return "Mensaje enviado con exito!";
     }
 
     @GetMapping("/getById/{id}")

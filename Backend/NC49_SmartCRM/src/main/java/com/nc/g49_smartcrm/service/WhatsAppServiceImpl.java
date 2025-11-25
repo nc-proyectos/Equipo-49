@@ -13,7 +13,6 @@ import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,23 +20,77 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class WhatsAppServiceImpl implements WhatsAppService {
-    @Value("${twilio.phoneNumber}")
-    private String twilioPhoneNumber;
+    @Value("${whatsapp.api.url}")
+    private String baseUrl;
 
-    public void enviarMensaje(String numeroDestino, String mensaje) {
-        Message.creator(
-                new PhoneNumber("whatsapp:" + numeroDestino),
-                new PhoneNumber("whatsapp:" + twilioPhoneNumber),
-                mensaje
-        ).create();
+    @Value("${whatsapp.phone.number.id}")
+    private String phoneNumberId;
+
+    @Value("${whatsapp.token}")
+    private String token;
+
+    private final WhatsappClient client;
+    private final MessageService messageService;
+
+    public void sendTextMessage(String to, String message) throws NumberParseException {
+        Map<String, Object> body = Map.of(
+                "messaging_product", "whatsapp",
+                "recipient_type", "individual",
+                "to", to,
+                "type", "text",
+                "text", Map.of("body", message)
+        );
+
+        client.sendMessage(
+                phoneNumberId,
+                "Bearer " + token,
+                body
+        );
+
+        to = normalizePhone(to);
+        messageService.saveMessage(new InboundMessage(
+                Channel.WHATSAPP,
+                ContactSource.WHATSAPP,
+                SenderType.AGENT,
+                null,
+                null,
+                to,
+                null,
+                message,
+                1L
+        ));
     }
 
-    public String recibirMensaje(Map<String, String> datos) {
-        String from = datos.get("From");        // +54911.... (cliente)
-        String body = datos.get("Body");        // mensaje del cliente
-        String messageId = datos.get("MessageSid");
+    public void receiveMessage(WhatsAppWebhook webhook){
+        //esto tiene q estar asi si no tira error 500 en ngrok
+        try {
+            // seguridad: entry
+            if (webhook.getEntry() == null || webhook.getEntry().isEmpty()) {
+                return;
+            }
 
+            WhatsAppWebhook.Entry entry = webhook.getEntry().get(0);
+
+            // seguridad: changes
+            if (entry.getChanges() == null || entry.getChanges().isEmpty()) {
+                return;
+            }
+
+            WhatsAppWebhook.Change change = entry.getChanges().get(0);
+
+            if (change.getValue() == null) {
+                return;
+            }
+
+            // seguridad: messages
+            List<WhatsAppWebhook.Message> messages = change.getValue().getMessages();
+
+            if (messages == null || messages.isEmpty()) {
+                // no son mensajes → puede ser un "status"
+                return;
+            }
             WhatsAppWebhook.Message msg = messages.get(0);
 
             String from = "+" + msg.getFrom();
@@ -87,5 +140,5 @@ public class WhatsAppServiceImpl implements WhatsAppService {
         return raw.replaceAll("[^0-9]", "");
     }
 
-
 }
+
