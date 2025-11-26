@@ -2,15 +2,20 @@ package com.nc.g49_smartcrm.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String MESSAGE = "message";
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(
             HttpStatus status,
@@ -85,5 +90,25 @@ public class GlobalExceptionHandler {
                 "Unexpected server error occurred",
                 request.getRequestURI()
         );
+    }
+
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCredentialException(InvalidCredentialException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put(MESSAGE, ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(EmailAlreadyExistException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put(MESSAGE, ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
     }
 }
