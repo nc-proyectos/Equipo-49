@@ -24,6 +24,8 @@ Backend/NC49_SmartCRM/out/
 /frontend/.nuxt/
 /frontend/.angular/
 
+/backend/worker-node/node_modules/
+
 # --- General ---
 *.class
 *.jar

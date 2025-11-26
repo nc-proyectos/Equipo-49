@@ -3,9 +3,11 @@ package com.nc.g49_smartcrm.dto;
 import com.nc.g49_smartcrm.model.Channel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ConversationStartRequest {
 
     @NotNull

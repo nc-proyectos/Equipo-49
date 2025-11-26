@@ -15,4 +15,6 @@ public interface ContactService {
     ContactResponse update(Long id, ContactRequest contactRequest);
 
     void delete(Long id);
+
+    ContactResponse findByPhoneOrCreateNewContact(String phone, ContactRequest request);
 }
