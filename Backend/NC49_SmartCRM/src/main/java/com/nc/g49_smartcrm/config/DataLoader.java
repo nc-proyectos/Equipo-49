@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -25,6 +26,7 @@ public class DataLoader implements CommandLineRunner {
     private final ConversationRepository conversationRepository;
     private final TaskRepository taskRepository;
     private final MessageRepository messageRepository;
+    private final PasswordEncoder passwordEncoder;
 
     Logger logger = LoggerFactory.getLogger(DataLoader.class);
 
@@ -34,20 +36,19 @@ public class DataLoader implements CommandLineRunner {
         logger.info("DataLoader started");
 
         logger.info("Creating user");
-        User user = userRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .firstname("Admin")
-                            .lastname("User")
-                            .email("admin@mail.com")
-                            .password("112233")
-                            .role(Role.ADMIN)
-                            .createdAt(Instant.now())
-                            .updatedAt(Instant.now())
-                            .build();
-                    return userRepository.save(newUser);
-                });
+
+        User user = userRepository.findByEmail("admin@mail.com").orElseGet(() -> {
+            User newUser = User.builder()
+                    .firstname("Admin")
+                    .lastname("User")
+                    .email("admin@mail.com")
+                    .password(passwordEncoder.encode("112233"))
+                    .role(Role.ADMIN)
+                    .createdAt(Instant.now())
+                    .updatedAt(Instant.now())
+                    .build();
+            return userRepository.save(newUser);
+        });
 
         logger.info("Creating contact");
         Contact contact = contactRepository.findAll().stream()
