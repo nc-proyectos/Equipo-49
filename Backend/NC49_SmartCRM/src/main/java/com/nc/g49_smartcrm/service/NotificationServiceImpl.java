@@ -20,7 +20,7 @@ public class NotificationServiceImpl implements NotificationService {
         String payload = String.format("{\"type\":\"TASK_REMINDER\",\"taskId\":%d,\"message\":\"%s\"}", taskId, message.replace("\"", "\\\""));
         try {
             wsHandler.sendToUser(userId, new TextMessage(payload));
-            log.info("[Notification service] Reminder sent to user {}: {}", userId, payload);
+            log.info("Reminder sent to user {}: {}", userId, payload);
         } catch (Exception e) {
             log.error("Error sending ws to user {}", userId, e);
         }
