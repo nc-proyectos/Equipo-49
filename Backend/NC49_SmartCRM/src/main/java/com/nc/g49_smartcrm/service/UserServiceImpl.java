@@ -8,6 +8,10 @@ import com.nc.g49_smartcrm.model.User;
 import com.nc.g49_smartcrm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private UserMapper userMapper;
 
@@ -38,8 +43,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toEntity(userRequest);
 
-        //TODO encode User Password
-        user.setPassword(userRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         User savedUser = userRepository.save(user);
 
@@ -65,5 +69,13 @@ public class UserServiceImpl implements UserService {
         //TODO set owner id to another user??
 
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
