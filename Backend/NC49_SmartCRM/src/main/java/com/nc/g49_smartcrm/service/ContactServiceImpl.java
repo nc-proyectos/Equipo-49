@@ -7,8 +7,10 @@ import com.nc.g49_smartcrm.exception.EmailAlreadyExistException;
 import com.nc.g49_smartcrm.mapper.ContactMapper;
 import com.nc.g49_smartcrm.model.Contact;
 import com.nc.g49_smartcrm.model.ContactStatus;
+import com.nc.g49_smartcrm.model.Conversation;
 import com.nc.g49_smartcrm.model.User;
 import com.nc.g49_smartcrm.repository.ContactRepository;
+import com.nc.g49_smartcrm.repository.ConversationRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
     private final ContactMapper contactMapper;
     private UserService userService;
+    private ConversationRepository conversationRepository;
 
     @Override
     public List<ContactResponse> getAll() {
@@ -58,8 +61,9 @@ public class ContactServiceImpl implements ContactService {
         if (!contactRepository.existsById(id)) {
             throw new ContactNotFoundException(id);
         }
-        //TODO delete conversations and messages
 
+        List<Conversation> conversations = conversationRepository.findAllByContact_Id(id);
+        conversationRepository.deleteAll(conversations);
         contactRepository.deleteById(id);
     }
 
