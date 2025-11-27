@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -26,10 +25,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse createTask(TaskRequest taskRequest) {
 
-        //TODO set UTC to LOCAL
-        Instant localReminderAt = taskRequest.getReminderAt().minus(Duration.ofHours(1));
-
-        taskRequest.setReminderAt(localReminderAt);
         Task task = taskMapper.toEntity(taskRequest);
         task.setCreatedAt(Instant.now());
         task.setUserId(taskRequest.getUserId());
