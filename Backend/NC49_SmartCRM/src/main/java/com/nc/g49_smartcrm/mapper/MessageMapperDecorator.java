@@ -7,14 +7,15 @@ import com.nc.g49_smartcrm.model.Message;
 import com.nc.g49_smartcrm.model.SenderType;
 import com.nc.g49_smartcrm.service.ContactService;
 import com.nc.g49_smartcrm.service.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@AllArgsConstructor
 public abstract class MessageMapperDecorator implements MessageMapper {
 
-    private final ContactService contactService;
-    private final UserService userService;
+    @Autowired
+    private ContactService contactService;
+    @Autowired
+    private UserService userService;
+
     private MessageMapper delegate;
 
     @Autowired
