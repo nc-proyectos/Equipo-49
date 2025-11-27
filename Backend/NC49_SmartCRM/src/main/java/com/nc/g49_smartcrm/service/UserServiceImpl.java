@@ -4,7 +4,9 @@ import com.nc.g49_smartcrm.dto.UserRequest;
 import com.nc.g49_smartcrm.dto.UserResponse;
 import com.nc.g49_smartcrm.exception.UserNotFoundException;
 import com.nc.g49_smartcrm.mapper.UserMapper;
+import com.nc.g49_smartcrm.model.Conversation;
 import com.nc.g49_smartcrm.model.User;
+import com.nc.g49_smartcrm.repository.ConversationRepository;
 import com.nc.g49_smartcrm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private ConversationRepository conversationRepository;
+
 
     @Override
     public List<UserResponse> getAll() {
@@ -65,8 +69,10 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
         }
-        //TODO delete conversations and messages
-        //TODO set owner id to another user??
+
+        List<Conversation> conversations = conversationRepository.findAllByUser_Id(id);
+        conversationRepository.deleteAll(conversations);
+        userRepository.deleteById(id);
 
         userRepository.deleteById(id);
     }
