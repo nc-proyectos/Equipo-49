@@ -1,6 +1,9 @@
 package com.nc.g49_smartcrm.config;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -64,8 +67,6 @@ public class JwtService {
             getAllClaims(token);
             return true;
         } catch (ExpiredJwtException e) {
-            return false;
-        } catch (JwtException e) {
             return false;
         }
     }

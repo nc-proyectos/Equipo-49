@@ -1,6 +1,8 @@
 package com.nc.g49_smartcrm.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private static final String MESSAGE = "message";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ResponseEntity<ErrorResponse> buildErrorResponse(
             HttpStatus status,
@@ -85,6 +88,8 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        logger.error("Unhandled error at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
+
         return buildErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Unexpected server error occurred",
