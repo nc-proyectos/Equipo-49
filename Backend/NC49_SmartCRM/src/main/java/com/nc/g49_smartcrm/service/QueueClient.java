@@ -28,8 +28,6 @@ public class QueueClient {
 
         try {
 
-            //TODO set USER
-            userId = 1L;
             URI uri = URI.create(workerBaseUrl + "/queue/reminder");
 
             Map<String, Object> payload = Map.of(

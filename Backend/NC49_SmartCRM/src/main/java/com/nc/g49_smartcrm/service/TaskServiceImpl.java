@@ -32,8 +32,7 @@ public class TaskServiceImpl implements TaskService {
         taskRequest.setReminderAt(localReminderAt);
         Task task = taskMapper.toEntity(taskRequest);
         task.setCreatedAt(Instant.now());
-        //TODO set user
-        task.setUserId(1L);
+        task.setUserId(taskRequest.getUserId());
         task.setStatus(Task.Status.PENDING);
         Task saved = taskRepository.save(task);
 
