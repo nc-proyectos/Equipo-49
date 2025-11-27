@@ -67,10 +67,10 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public ConversationResponse findByContactPhoneOrStartNewConversation(String phoneNumber,ConversationStartRequest request) {
-        Conversation conversation=conversationRepository
-                .findByContact_PhoneAndStatus(phoneNumber,ConversationStatus.OPEN)
-                .orElseGet(()->createConversation(request));
+    public ConversationResponse findByContactPhoneOrStartNewConversation(String phoneNumber, ConversationStartRequest request) {
+        Conversation conversation = conversationRepository
+                .findByContact_PhoneAndStatus(phoneNumber, ConversationStatus.OPEN)
+                .orElseGet(() -> createConversation(request));
         return conversationMapper.toDto(conversation);
     }
 
@@ -78,8 +78,8 @@ public class ConversationServiceImpl implements ConversationService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
-        Contact contact=contactRepository.findById(request.getContactId())
-                .orElseThrow(()->new ContactNotFoundException(request.getContactId()));
+        Contact contact = contactRepository.findById(request.getContactId())
+                .orElseThrow(() -> new ContactNotFoundException(request.getContactId()));
 
         Conversation conversation = Conversation.builder()
                 .subject(request.getSubject())

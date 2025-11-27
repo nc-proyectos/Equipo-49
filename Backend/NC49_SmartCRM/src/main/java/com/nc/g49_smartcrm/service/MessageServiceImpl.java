@@ -3,7 +3,9 @@ package com.nc.g49_smartcrm.service;
 import com.nc.g49_smartcrm.dto.*;
 import com.nc.g49_smartcrm.exception.MessageNotFoundException;
 import com.nc.g49_smartcrm.mapper.MessageMapper;
-import com.nc.g49_smartcrm.model.*;
+import com.nc.g49_smartcrm.model.ContactStatus;
+import com.nc.g49_smartcrm.model.Conversation;
+import com.nc.g49_smartcrm.model.Message;
 import com.nc.g49_smartcrm.repository.ConversationRepository;
 import com.nc.g49_smartcrm.repository.MessageRepository;
 import jakarta.transaction.Transactional;
@@ -50,10 +52,10 @@ public class MessageServiceImpl implements MessageService {
 
     @Transactional
     @Override
-    public MessageResponse saveMessage(InboundMessage inboundMessage){
+    public MessageResponse saveMessage(InboundMessage inboundMessage) {
 
         //verifica si existe el contacto si no crea uno nuevo.
-        ContactResponse contact=contactService
+        ContactResponse contact = contactService
                 .findByPhoneOrCreateNewContact(inboundMessage.phone(),
                         new ContactRequest(
                                 inboundMessage.firstName(),
@@ -66,7 +68,7 @@ public class MessageServiceImpl implements MessageService {
                         ));
 
         //verifica si hay una conversacion abierta o inicia una nueva.
-        ConversationResponse conversation=conversationService
+        ConversationResponse conversation = conversationService
                 .findByContactPhoneOrStartNewConversation(inboundMessage.phone(),
                         new ConversationStartRequest(
                                 inboundMessage.userId(),
@@ -77,12 +79,12 @@ public class MessageServiceImpl implements MessageService {
                         )
                 );
 
-        MessageRequest messageRequest=new MessageRequest(
+        MessageRequest messageRequest = new MessageRequest(
                 contact.getId(),
                 inboundMessage.senderType(),
                 inboundMessage.message()
         );
 
-        return addMessage(conversation.getId(),messageRequest);
+        return addMessage(conversation.getId(), messageRequest);
     }
 }
