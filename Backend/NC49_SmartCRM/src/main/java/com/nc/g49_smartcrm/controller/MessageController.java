@@ -25,7 +25,7 @@ public class MessageController {
             @RequestParam(name = "hub.challenge") String challenge,
             @RequestParam(name = "hub.verify_token") String token) {
 
-        return whatsAppService.verifyUrl(mode,challenge,token);
+        return whatsAppService.verifyUrl(mode, challenge, token);
     }
 
     //el end point q recibe los mensajes desde la api de wpp.
@@ -38,7 +38,7 @@ public class MessageController {
     @PostMapping("/responder")
     @ResponseStatus(HttpStatus.OK)
     public String enviarMensaje(@RequestParam String numero, @RequestParam String mensaje) throws NumberParseException {
-        whatsAppService.sendTextMessage(numero,mensaje);
+        whatsAppService.sendTextMessage(numero, mensaje);
         return "Mensaje enviado con exito!";
     }
 

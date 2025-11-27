@@ -13,5 +13,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     Optional<Conversation> findByContact_PhoneAndStatus(String phone, ConversationStatus status);
 
     List<Conversation> findAllByContact_Id(Long id);
+
     List<Conversation> findAllByUser_Id(Long id);
 }

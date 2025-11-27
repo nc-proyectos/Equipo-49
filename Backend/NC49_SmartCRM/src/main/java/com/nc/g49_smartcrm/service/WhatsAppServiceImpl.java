@@ -4,12 +4,11 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.nc.g49_smartcrm.client.WhatsappClient;
-import com.nc.g49_smartcrm.dto.*;
+import com.nc.g49_smartcrm.dto.InboundMessage;
+import com.nc.g49_smartcrm.dto.WhatsAppWebhook;
 import com.nc.g49_smartcrm.model.Channel;
 import com.nc.g49_smartcrm.model.ContactSource;
 import com.nc.g49_smartcrm.model.SenderType;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,17 +21,14 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class WhatsAppServiceImpl implements WhatsAppService {
-    @Value("${whatsapp.api.url}")
-    private String baseUrl;
-
-    @Value("${whatsapp.phone.number.id}")
-    private String phoneNumberId;
-
-    @Value("${whatsapp.token}")
-    private String token;
-
     private final WhatsappClient client;
     private final MessageService messageService;
+    @Value("${whatsapp.api.url}")
+    private String baseUrl;
+    @Value("${whatsapp.phone.number.id}")
+    private String phoneNumberId;
+    @Value("${whatsapp.token}")
+    private String token;
 
     public void sendTextMessage(String to, String message) throws NumberParseException {
         Map<String, Object> body = Map.of(
@@ -63,7 +59,7 @@ public class WhatsAppServiceImpl implements WhatsAppService {
         ));
     }
 
-    public void receiveMessage(WhatsAppWebhook webhook){
+    public void receiveMessage(WhatsAppWebhook webhook) {
         //esto tiene q estar asi si no tira error 500 en ngrok
         try {
             // seguridad: entry
@@ -118,9 +114,9 @@ public class WhatsAppServiceImpl implements WhatsAppService {
         }
     }
 
-    public String verifyUrl(String mode,String challenge,String token){
+    public String verifyUrl(String mode, String challenge, String token) {
         if (!("subscribe".equals(mode) && "123".equals(token))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Invalid verify token");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid verify token");
         }
         return challenge;
     }
