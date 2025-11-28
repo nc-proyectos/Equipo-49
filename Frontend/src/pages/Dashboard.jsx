@@ -13,8 +13,29 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 //import Box from '@mui/material/Box';
 import  { DataGrid }  from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EmailIcon from '@mui/icons-material/Email';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+
+const data = [
+  { name: "WhatsApp", value: 4200 },
+  { name: "Email", value: 2900 },
+  { name: "Llamadas", value: 1100 },
+  { name: "SMS", value: 200 },
+];
+
+
+
+//CHARTS
+
+
 
 export default function Dashboard() {
+
+  const [tickPlacement, setTickPlacement] = React.useState('middle');
+  const [tickLabelPlacement, setTickLabelPlacement] = React.useState('middle');
+
   
   const [age, setAge] = React.useState('');
 
@@ -22,6 +43,7 @@ export default function Dashboard() {
     setAge(event.target.value);
   };
   
+
   return (
     <>
       <h2>Hola,Camila!</h2>
@@ -63,33 +85,36 @@ export default function Dashboard() {
           <p>0 urgentes, 0 normales</p>
         </article>
       </div>
-      <div className='dosCuadros'>
-        <article className='dosCuadros1'>
-          <h3>Titulo</h3>
-          <Box className="icono1" sx={{ minWidth: 120 }}>
-          <FormControl className='select' fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={age}
-            label="Age"
-            onChange={handleChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-          </FormControl>
-        </Box>
-        </article>
-        <article className='dosCuadros2'>
-          <h3>Titulo</h3>
-          <MoreHorizIcon className='icono2'/>
-        </article>
+    <div style={{display:'flex'}}>  
+      <div style={{ width: "50%", height: 306 , marginTop: '5%'}}>
+      <h3>Mensajes por Canal</h3>
+
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#4ade80" /> {/* Color verde (WhatsApp style) */}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>   
+    <div style={{border: 'groove' , borderRadius: '2%', marginTop:'10%' , width: '30%' , marginLeft: '10%' , height:'1%'}}>
+      <span style={{fontWeight: 'bold' , textAlign: 'Center'}}>Acciones Rapidas</span>
+      <div style={{display: 'flex' , marginTop:'5%'}}>
+        <AddIcon style={{background:'#8CD3EC' , borderRadius: '5%' }}/><p>Nuevo lead</p><ArrowForwardIosIcon style={{marginLeft:'69%'}}/>
       </div>
+      <div style={{display: 'flex'}}>
+        <WhatsAppIcon style={{background:'#38DA84', borderRadius: '5%'}}/><p>Enviar WhatsApp</p><ArrowForwardIosIcon style={{marginLeft:'60%'}}/>
+      </div>
+      <div style={{display: 'flex'}}>
+        <EmailIcon style={{background:'#EF77ED' , borderRadius: '5%'}}/><p>Campaña Email</p><ArrowForwardIosIcon style={{marginLeft:'62%'}}/>
+      </div>
+    </div>
+  </div>
+
       <div className='contenedorInformacion'>
-        <div style={{ height: 250, width: '46%' , marginLeft: '5%', border: 'groove' , borderRadius: '2%' }}>
+        <div style={{ height: 250, width: '46%' , marginLeft: '5%', border: 'groove' , borderRadius: '2%' , marginTop: '12%' }}>
         <div
           style={{
             display:'flex',
@@ -134,7 +159,7 @@ export default function Dashboard() {
           }}
         />
       </div>
-      <div style={{ height: 250, width: '30%' , marginLeft: '9%' , border: 'groove' , borderRadius: '2%' }}>
+      <div style={{ height: 250, width: '30%' , marginLeft: '9%' , border: 'groove' , borderRadius: '2%' , marginTop: '12%' }}>
         <div
           style={{
             display:'flex',
@@ -182,26 +207,3 @@ export default function Dashboard() {
     </>
   )
 }
-/*
-<div style= {{marginLeft: '88%'}}>
-            <AddIcon/>
-          </div>
-/*
-<div className='conversaciones'>
-          <article>
-            <div className='conversacionesRecientes'>
-              <h5>Conversaciónes Recientes</h5>
-              <h6>Ver Todas</h6>
-            </div>
-            <div>
-              <h4>No hay conversaciónes todavía</h4>
-            </div>
-          </article>
-          <article className='recordatorios'>
-            <div className='recordatorios'>
-              <h3>Recordatorios</h3>
-              <AddIcon/>
-            </div>
-          </article>
-        </div>
-*/
