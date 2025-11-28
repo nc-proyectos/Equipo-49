@@ -17,7 +17,10 @@ public interface ContactMapper {
     @Mapping(target = "updatedAt", expression = "java(java.time.Instant.now())")
     Contact toEntity(ContactRequest request);
 
-    @Mapping(target = "ownerId", source = "owner.id")
+    @Mapping(target = "ownerId",
+            expression = "java(contact.getOwner() != null ? contact.getOwner().getId() : null)")
+    @Mapping(target = "ownerName",
+            expression = "java(contact.getOwner() != null ? contact.getOwner().getFirstname() : null)")
     ContactResponse toDto(Contact contact);
 
     @Mapping(target = "id", ignore = true)

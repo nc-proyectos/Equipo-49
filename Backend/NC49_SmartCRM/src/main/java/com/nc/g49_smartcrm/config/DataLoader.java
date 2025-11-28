@@ -60,6 +60,7 @@ public class DataLoader implements CommandLineRunner {
                             .phone("+54666456456")
                             .status(ContactStatus.LEAD_ACTIVE)
                             .source(ContactSource.WHATSAPP)
+                            .owner(user)
                             .createdAt(Instant.now())
                             .updatedAt(Instant.now())
                             .build();

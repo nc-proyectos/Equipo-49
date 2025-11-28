@@ -8,6 +8,9 @@ import com.nc.g49_smartcrm.model.User;
 import com.nc.g49_smartcrm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAll() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll().stream().filter(user -> !user.isDeleted())
                 .map(userMapper::toDto)
                 .toList();
     }
@@ -31,19 +34,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return userMapper.toDto(user);
-    }
-
-    @Override
-    public UserResponse create(UserRequest userRequest) {
-
-        User user = userMapper.toEntity(userRequest);
-
-        //TODO encode User Password
-        user.setPassword(userRequest.getPassword());
-
-        User savedUser = userRepository.save(user);
-
-        return userMapper.toDto(savedUser);
     }
 
     @Override
@@ -58,12 +48,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
-        //TODO delete conversations and messages
-        //TODO set owner id to another user??
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        userRepository.deleteById(id);
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

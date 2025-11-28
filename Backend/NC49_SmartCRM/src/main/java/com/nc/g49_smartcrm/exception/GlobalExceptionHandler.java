@@ -1,114 +1,123 @@
 package com.nc.g49_smartcrm.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final String MESSAGE = "message";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private ResponseEntity<ErrorResponse> buildErrorResponse(
+    private ResponseEntity<ErrorResponse> build(
             HttpStatus status,
             String message,
-            String path
+            HttpServletRequest request
     ) {
-        ErrorResponse response = ErrorResponse.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error(status.getReasonPhrase())
-                .message(message)
-                .path(path)
-                .build();
-
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(status).body(
+                ErrorResponse.builder()
+                        .timestamp(Instant.now())
+                        .status(status.value())
+                        .error(status.getReasonPhrase())
+                        .message(message)
+                        .path(request.getRequestURI())
+                        .build()
+        );
     }
 
+    /**
+     * ============================
+     * VALIDATION ERRORS
+     * ============================
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationErrors(
+    public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
             HttpServletRequest request
     ) {
-        StringBuilder sb = new StringBuilder("Validation failed: ");
+        String msg = ex.getBindingResult().getFieldErrors().stream()
+                .map(err -> err.getField() + " (" + err.getDefaultMessage() + ")")
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("Validation failed");
 
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                sb.append(error.getField())
-                        .append(" (")
-                        .append(error.getDefaultMessage())
-                        .append("), ")
-        );
-
-        String finalMsg = sb.substring(0, sb.length() - 2);
-
-        return buildErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                finalMsg,
-                request.getRequestURI()
-        );
+        return build(HttpStatus.BAD_REQUEST, msg, request);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(
-            ResourceNotFoundException ex,
+    /**
+     * ============================
+     * 404 NOT FOUND
+     * ============================
+     */
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(
+            NotFoundException ex,
             HttpServletRequest request
     ) {
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                ex.getMessage(),
-                request.getRequestURI()
-        );
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(
-            IllegalArgumentException ex,
+    /**
+     * ============================
+     * 400 BAD REQUEST
+     * ============================
+     */
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+            BadRequestException ex,
             HttpServletRequest request
     ) {
-        return buildErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage(),
-                request.getRequestURI()
-        );
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
+    /**
+     * ============================
+     * 401 UNAUTHORIZED
+     * ============================
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException ex,
+            HttpServletRequest request
+    ) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    }
+
+    /**
+     * ============================
+     * 409 CONFLICT
+     * ============================
+     */
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(
+            ConflictException ex,
+            HttpServletRequest request
+    ) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    /**
+     * ============================
+     * GENERIC EXCEPTION (500)
+     * ============================
+     */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
+    public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,
             HttpServletRequest request
     ) {
-        return buildErrorResponse(
+        logger.error("Unhandled exception at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
+
+        return build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Unexpected server error occurred",
-                request.getRequestURI()
+                request
         );
-    }
-
-    @ExceptionHandler(InvalidCredentialException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidCredentialException(InvalidCredentialException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put(MESSAGE, ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(response);
-    }
-
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(EmailAlreadyExistException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put(MESSAGE, ex.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(response);
     }
 }
