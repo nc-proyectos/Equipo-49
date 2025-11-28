@@ -4,9 +4,7 @@ import com.nc.g49_smartcrm.dto.UserRequest;
 import com.nc.g49_smartcrm.dto.UserResponse;
 import com.nc.g49_smartcrm.exception.UserNotFoundException;
 import com.nc.g49_smartcrm.mapper.UserMapper;
-import com.nc.g49_smartcrm.model.Conversation;
 import com.nc.g49_smartcrm.model.User;
-import com.nc.g49_smartcrm.repository.ConversationRepository;
 import com.nc.g49_smartcrm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,12 +21,10 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
-    private ConversationRepository conversationRepository;
-
 
     @Override
     public List<UserResponse> getAll() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll().stream().filter(user -> !user.isDeleted())
                 .map(userMapper::toDto)
                 .toList();
     }
@@ -52,15 +48,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        List<Conversation> conversations = conversationRepository.findAllByUser_Id(id);
-        conversationRepository.deleteAll(conversations);
-        userRepository.deleteById(id);
-
-        userRepository.deleteById(id);
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 
     @Override

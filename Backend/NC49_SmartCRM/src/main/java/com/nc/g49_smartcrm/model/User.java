@@ -48,6 +48,9 @@ public class User implements UserDetails, Serializable {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
