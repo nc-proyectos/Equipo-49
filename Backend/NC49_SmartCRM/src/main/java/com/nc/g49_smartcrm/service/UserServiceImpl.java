@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private UserMapper userMapper;
     private ConversationRepository conversationRepository;
@@ -40,18 +38,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return userMapper.toDto(user);
-    }
-
-    @Override
-    public UserResponse create(UserRequest userRequest) {
-
-        User user = userMapper.toEntity(userRequest);
-
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-
-        User savedUser = userRepository.save(user);
-
-        return userMapper.toDto(savedUser);
     }
 
     @Override
