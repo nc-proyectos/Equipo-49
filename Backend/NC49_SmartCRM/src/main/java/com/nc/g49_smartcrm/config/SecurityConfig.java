@@ -38,6 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/test/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/internal/task/**").permitAll()
+                        .requestMatchers("/ws/notifications/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -61,7 +63,7 @@ public class SecurityConfig {
         if ("dev".equalsIgnoreCase(activeProfile)) {
             config.setAllowedOrigins(List.of("http://localhost:3000"));
         } else {
-            //TODO agregar dominio
+            //TODO agregar dominio prod
             config.setAllowedOrigins(List.of("https://***************"));
         }
 
