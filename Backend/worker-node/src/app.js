@@ -22,11 +22,13 @@ app.post("/queue/reminder", async (req, res) => {
     });
   }
 
-  if (targetTime <= now) {
-    return res.status(400).json({
-      error: "reminderAt must be in the future",
-    });
-  }
+  //TODO: manejar retrasos mayores a 24.8 días
+  //TODO: validar reminderAt en el pasado
+  //if (targetTime <= now) {
+  //  return res.status(400).json({
+  //    error: "reminderAt must be in the future",
+  //  });
+  //}
 
   const MAX_DELAY = 2 ** 31 - 1; // límite de BullMQ
   const delay = Math.min(targetTime - now, MAX_DELAY);
