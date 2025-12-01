@@ -81,7 +81,7 @@ export default function Dashboard() {
             <p>Pendientes</p>
           </div>
           <p>Seguimiento Hoy</p>
-          <h2>23</h2>
+          <h2>0</h2>
           <p>0 urgentes, 0 normales</p>
         </article>
       </div>
