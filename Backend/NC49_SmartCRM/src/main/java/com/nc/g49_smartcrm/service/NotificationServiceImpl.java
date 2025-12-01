@@ -1,28 +1,36 @@
 package com.nc.g49_smartcrm.service;
 
-
+import com.nc.g49_smartcrm.model.Notification;
+import com.nc.g49_smartcrm.repository.NotificationRepository;
 import com.nc.g49_smartcrm.websocket.NotificationWebSocketHandler;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
+
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
-    private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
     private final NotificationWebSocketHandler wsHandler;
+    private final NotificationRepository notificationRepository;
+    private final Logger logger = Logger.getLogger(NotificationServiceImpl.class.getName());
 
-    @Override
     public void sendReminder(Long userId, Long taskId, String message) {
-        String payload = String.format("{\"type\":\"TASK_REMINDER\",\"taskId\":%d,\"message\":\"%s\"}", taskId, message.replace("\"", "\\\""));
-        try {
-            wsHandler.sendToUser(userId, new TextMessage(payload));
-            log.info("Reminder sent to user {}: {}", userId, payload);
-        } catch (Exception e) {
-            log.error("Error sending ws to user {}", userId, e);
+
+        logger.info("Sending reminder for taskId= {}");
+        Notification notification = new Notification(
+                userId,
+                "TASK_REMINDER",
+                message,
+                taskId
+        );
+
+        notification = notificationRepository.save(notification);
+        boolean sent = wsHandler.sendToUser(userId, notification);
+
+        if (!sent) {
+            logger.warning("User offline, notification stored as unread");
         }
     }
 }

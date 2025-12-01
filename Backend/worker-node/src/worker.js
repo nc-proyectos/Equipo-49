@@ -7,7 +7,7 @@ const worker = new Worker(
     console.log("Received job:", job.id, job.data);
 
     await fetch(
-      `${process.env.SPRING_BASE_URL}/internal/task/notify/${job.id}`,
+      `${process.env.SPRING_BASE_URL}/internal/task/notify/${job.data.taskId}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
