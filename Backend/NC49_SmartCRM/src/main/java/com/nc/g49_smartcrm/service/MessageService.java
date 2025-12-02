@@ -1,6 +1,6 @@
 package com.nc.g49_smartcrm.service;
 
-import com.nc.g49_smartcrm.dto.InboundMessage;
+import com.nc.g49_smartcrm.dto.DataMessage;
 import com.nc.g49_smartcrm.dto.MessageRequest;
 import com.nc.g49_smartcrm.dto.MessageResponse;
 
@@ -13,5 +13,5 @@ public interface MessageService {
 
     List<MessageResponse> getMessages(Long conversationId);
 
-    MessageResponse saveMessage(InboundMessage inboundMessage);
+    MessageResponse saveMessage(DataMessage dataMessage);
 }

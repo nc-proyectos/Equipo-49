@@ -27,6 +27,7 @@ public class DataLoader implements CommandLineRunner {
     private final TaskRepository taskRepository;
     private final MessageRepository messageRepository;
     private final PasswordEncoder passwordEncoder;
+    private final IntegrationRepository integrationRepository;
 
     Logger logger = LoggerFactory.getLogger(DataLoader.class);
 
@@ -48,6 +49,16 @@ public class DataLoader implements CommandLineRunner {
                     .updatedAt(Instant.now())
                     .build();
             return userRepository.save(newUser);
+        });
+
+        Integration wpp=integrationRepository.findByType(Channel.WHATSAPP).orElseGet(()->{
+            Integration newIntegration = Integration.builder()
+                    .type(Channel.WHATSAPP)
+                    .externalId("820346491169670")
+                    .displayName("+15551854887")
+                    .user(user)
+                    .build();
+           return integrationRepository.save(newIntegration);
         });
 
         logger.info("Creating contact");

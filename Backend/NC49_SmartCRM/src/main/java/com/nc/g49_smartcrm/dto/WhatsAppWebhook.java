@@ -20,9 +20,15 @@ public class WhatsAppWebhook {
 
     @Data
     public static class Value {
+        private Metadata metadata;
         private List<Message> messages;
     }
 
+    @Data
+    public static class Metadata {
+        private String display_phone_number;
+        private String phone_number_id;
+    }
     @Data
     public static class Message {
         private String from;

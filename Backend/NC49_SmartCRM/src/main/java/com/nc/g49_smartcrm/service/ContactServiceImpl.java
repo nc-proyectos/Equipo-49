@@ -4,6 +4,7 @@ import com.nc.g49_smartcrm.dto.ContactRequest;
 import com.nc.g49_smartcrm.dto.ContactResponse;
 import com.nc.g49_smartcrm.exception.ContactNotFoundException;
 import com.nc.g49_smartcrm.exception.EmailAlreadyExistException;
+import com.nc.g49_smartcrm.exception.UserNotFoundException;
 import com.nc.g49_smartcrm.mapper.ContactMapper;
 import com.nc.g49_smartcrm.model.Contact;
 import com.nc.g49_smartcrm.model.ContactStatus;
@@ -11,6 +12,7 @@ import com.nc.g49_smartcrm.model.Conversation;
 import com.nc.g49_smartcrm.model.User;
 import com.nc.g49_smartcrm.repository.ContactRepository;
 import com.nc.g49_smartcrm.repository.ConversationRepository;
+import com.nc.g49_smartcrm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class ContactServiceImpl implements ContactService {
     private final ContactMapper contactMapper;
     private UserService userService;
     private ConversationRepository conversationRepository;
+    private UserRepository userRepository;
 
     @Override
     public List<ContactResponse> getAll() {
@@ -69,8 +72,9 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactResponse findByPhoneOrCreateNewContact(String phone, ContactRequest request) {
+        User user = userRepository.findById(request.getOwnerId())
+                .orElseThrow(() -> new UserNotFoundException(request.getOwnerId()));
 
-        User user = userService.getCurrentUser();
         Contact contact = contactRepository.findByPhone(phone)
                 .orElseGet(() -> contactRepository.save(Contact.builder()
                         .firstname(request.getFirstname())
@@ -84,7 +88,6 @@ public class ContactServiceImpl implements ContactService {
                         .updatedAt(Instant.now())
                         .build()
                 ));
-
         return contactMapper.toDto(contact);
     }
 

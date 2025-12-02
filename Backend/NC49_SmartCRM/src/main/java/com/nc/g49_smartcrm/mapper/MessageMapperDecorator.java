@@ -28,7 +28,7 @@ public abstract class MessageMapperDecorator implements MessageMapper {
         MessageResponse messageResponse = delegate.toDto(message);
         SenderResponse senderResponse;
 
-        if (message.getSenderType().equals(SenderType.CONTACT)) {
+        if (SenderType.CONTACT.equals(message.getSenderType())) {
             var contacto = contactService.getById(message.getSenderId());
             senderResponse = new SenderResponse(
                     message.getSenderType(),

@@ -75,6 +75,7 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     private Conversation createConversation(ConversationStartRequest request) {
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
@@ -90,6 +91,7 @@ public class ConversationServiceImpl implements ConversationService {
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
+
         return conversationRepository.save(conversation);
     }
 }

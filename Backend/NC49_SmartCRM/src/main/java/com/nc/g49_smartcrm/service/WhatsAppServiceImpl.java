@@ -4,11 +4,12 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.nc.g49_smartcrm.client.WhatsappClient;
-import com.nc.g49_smartcrm.dto.InboundMessage;
+import com.nc.g49_smartcrm.dto.DataMessage;
 import com.nc.g49_smartcrm.dto.WhatsAppWebhook;
-import com.nc.g49_smartcrm.model.Channel;
-import com.nc.g49_smartcrm.model.ContactSource;
-import com.nc.g49_smartcrm.model.SenderType;
+import com.nc.g49_smartcrm.exception.UserNotFoundException;
+import com.nc.g49_smartcrm.model.*;
+import com.nc.g49_smartcrm.repository.IntegrationRepository;
+import com.nc.g49_smartcrm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,10 @@ import java.util.Map;
 public class WhatsAppServiceImpl implements WhatsAppService {
     private final WhatsappClient client;
     private final MessageService messageService;
+    private final IntegrationRepository integrationRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
+
     @Value("${whatsapp.api.url}")
     private String baseUrl;
     @Value("${whatsapp.phone.number.id}")
@@ -39,14 +44,19 @@ public class WhatsAppServiceImpl implements WhatsAppService {
                 "text", Map.of("body", message)
         );
 
+        User user=userService.getCurrentUser();
+
+        Integration integration=integrationRepository.findByTypeAndUserId(Channel.WHATSAPP, user.getId())
+                        .orElseThrow(()->new RuntimeException("Integration id not found."));
+
         client.sendMessage(
-                phoneNumberId,
-                "Bearer " + token,
+                integration.getExternalId(),
+                "Bearer " + integration.getAccessToken(),
                 body
         );
 
         to = normalizePhone(to);
-        messageService.saveMessage(new InboundMessage(
+        messageService.saveMessage(new DataMessage(
                 Channel.WHATSAPP,
                 ContactSource.WHATSAPP,
                 SenderType.AGENT,
@@ -55,7 +65,7 @@ public class WhatsAppServiceImpl implements WhatsAppService {
                 to,
                 null,
                 message,
-                1L
+                user.getId()
         ));
     }
 
@@ -89,13 +99,18 @@ public class WhatsAppServiceImpl implements WhatsAppService {
             }
             WhatsAppWebhook.Message msg = messages.get(0);
 
+            String userPhoneId=change.getValue().getMetadata().getPhone_number_id();
+
+            Integration integration=integrationRepository.findByExternalId(userPhoneId)
+                    .orElseThrow(()->new RuntimeException("User phone id not found"));
+
             String from = "+" + msg.getFrom();
             String body = msg.getText().getBody();
 
             System.out.println("From: " + from);
             System.out.println("Msg: " + body);
 
-            messageService.saveMessage(new InboundMessage(
+            messageService.saveMessage(new DataMessage(
                     Channel.WHATSAPP,
                     ContactSource.WHATSAPP,
                     SenderType.CONTACT,
@@ -104,7 +119,7 @@ public class WhatsAppServiceImpl implements WhatsAppService {
                     from,
                     null,
                     body,
-                    1L
+                    integration.getUser().getId()
             ));
 
             System.out.println("mensaje recibido!");

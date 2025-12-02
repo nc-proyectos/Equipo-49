@@ -3,9 +3,7 @@ package com.nc.g49_smartcrm.service;
 import com.nc.g49_smartcrm.dto.*;
 import com.nc.g49_smartcrm.exception.MessageNotFoundException;
 import com.nc.g49_smartcrm.mapper.MessageMapper;
-import com.nc.g49_smartcrm.model.ContactStatus;
-import com.nc.g49_smartcrm.model.Conversation;
-import com.nc.g49_smartcrm.model.Message;
+import com.nc.g49_smartcrm.model.*;
 import com.nc.g49_smartcrm.repository.ConversationRepository;
 import com.nc.g49_smartcrm.repository.MessageRepository;
 import jakarta.transaction.Transactional;
@@ -41,6 +39,12 @@ public class MessageServiceImpl implements MessageService {
         Message message = messageMapper.toEntity(request);
         message.setConversation(conversation);
         message.setCreatedAt(Instant.now());
+        if(SenderType.AGENT.equals(request.getSenderType())){
+            message.setDirection(MessageDirection.OUTBOUND);
+        }else{
+            message.setDirection(MessageDirection.INBOUND);
+        }
+        message.setMessageStatus(MessageStatus.SENT);
         Message savedMessage = messageRepository.save(message);
         return messageMapper.toDto(savedMessage);
     }
@@ -52,37 +56,43 @@ public class MessageServiceImpl implements MessageService {
 
     @Transactional
     @Override
-    public MessageResponse saveMessage(InboundMessage inboundMessage) {
-
+    public MessageResponse saveMessage(DataMessage dataMessage) {
         //verifica si existe el contacto si no crea uno nuevo.
         ContactResponse contact = contactService
-                .findByPhoneOrCreateNewContact(inboundMessage.phone(),
-                        new ContactRequest(
-                                inboundMessage.firstName(),
-                                inboundMessage.lastName(),
-                                inboundMessage.email(),
-                                inboundMessage.phone(),
-                                ContactStatus.CLIENT,
-                                inboundMessage.contactSource(),
-                                inboundMessage.userId()
-                        ));
+                    .findByPhoneOrCreateNewContact(dataMessage.phone(),
+                            new ContactRequest(
+                                    dataMessage.firstName(),
+                                    dataMessage.lastName(),
+                                    dataMessage.email(),
+                                    dataMessage.phone(),
+                                    ContactStatus.CLIENT,
+                                    dataMessage.contactSource(),
+                                    dataMessage.userId()
+                            ));
 
         //verifica si hay una conversacion abierta o inicia una nueva.
         ConversationResponse conversation = conversationService
-                .findByContactPhoneOrStartNewConversation(inboundMessage.phone(),
+                .findByContactPhoneOrStartNewConversation(dataMessage.phone(),
                         new ConversationStartRequest(
-                                inboundMessage.userId(),
+                                dataMessage.userId(),
                                 "subject",
                                 contact.getId(),
-                                inboundMessage.channel(),
-                                inboundMessage.message()
+                                dataMessage.channel(),
+                                dataMessage.message()
                         )
                 );
 
+        Long senderId;
+        if(SenderType.AGENT.equals(dataMessage.senderType())){
+            senderId=dataMessage.userId();
+        }else{
+            senderId=contact.getId();
+        }
+
         MessageRequest messageRequest = new MessageRequest(
-                contact.getId(),
-                inboundMessage.senderType(),
-                inboundMessage.message()
+                senderId,
+                dataMessage.senderType(),
+                dataMessage.message()
         );
 
         return addMessage(conversation.getId(), messageRequest);

@@ -6,7 +6,7 @@ import com.nc.g49_smartcrm.model.SenderType;
 
 //dto generico para cualquier tipo de canal( wpp, mail, sms, etc)
 //no hay problema si hay campos null
-public record InboundMessage(
+public record DataMessage(
         Channel channel,
         ContactSource contactSource,
         SenderType senderType,
