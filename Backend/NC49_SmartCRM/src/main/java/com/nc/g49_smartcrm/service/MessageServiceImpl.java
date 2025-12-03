@@ -51,7 +51,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageResponse> getMessages(Long conversationId) {
-        return List.of();
+        return messageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId)
+                .stream().map(m->messageMapper.toDto(m))
+                .toList();
     }
 
     @Transactional

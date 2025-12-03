@@ -2,6 +2,7 @@ package com.nc.g49_smartcrm.repository;
 
 import com.nc.g49_smartcrm.dto.ChannelCountDto;
 import com.nc.g49_smartcrm.dto.CountPerDayDto;
+import com.nc.g49_smartcrm.dto.MessageResponse;
 import com.nc.g49_smartcrm.model.Message;
 import com.nc.g49_smartcrm.model.MessageDirection;
 import com.nc.g49_smartcrm.model.SenderType;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
+
+    List<Message> findByConversationIdOrderByCreatedAtAsc(Long conversationId);
 
     @Query("""
     SELECT COUNT(m)

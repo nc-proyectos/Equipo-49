@@ -8,7 +8,7 @@ import java.time.Instant;
 public class MessageResponse {
 
     private Long id;
-    private String content;
+    private String body;
     private SenderResponse sender;
     private Instant createdAt;
 }

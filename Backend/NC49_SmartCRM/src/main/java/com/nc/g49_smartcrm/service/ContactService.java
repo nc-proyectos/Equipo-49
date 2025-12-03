@@ -14,6 +14,8 @@ public interface ContactService {
 
     ContactResponse update(Long id, ContactRequest contactRequest);
 
+    List<ContactResponse>findAllContactsByOwnerId(Long ownerId);
+
     void delete(Long id);
 
     ContactResponse findByPhoneOrCreateNewContact(String phone, ContactRequest request);

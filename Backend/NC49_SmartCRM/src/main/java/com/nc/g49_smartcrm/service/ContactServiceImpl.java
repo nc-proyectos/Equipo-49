@@ -71,6 +71,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public List<ContactResponse>findAllContactsByOwnerId(Long ownerId) {
+        return contactRepository.findAllByOwnerId(ownerId)
+                .stream().map(contactMapper::toDto)
+                .toList();
+    }
+
+    @Override
     public ContactResponse findByPhoneOrCreateNewContact(String phone, ContactRequest request) {
         User user = userRepository.findById(request.getOwnerId())
                 .orElseThrow(() -> new UserNotFoundException(request.getOwnerId()));
