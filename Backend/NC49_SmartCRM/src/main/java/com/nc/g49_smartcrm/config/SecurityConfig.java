@@ -61,7 +61,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         if ("dev".equalsIgnoreCase(activeProfile)) {
-            config.setAllowedOrigins(List.of("http://localhost:3000"));
+            config.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:5173"));
         } else {
             //TODO agregar dominio prod
             config.setAllowedOrigins(List.of("https://***************"));
