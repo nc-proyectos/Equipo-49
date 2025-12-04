@@ -16,7 +16,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +29,9 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
     private final String[] allowedMethods = new String[]{"GET", "POST", "PUT", "DELETE", "OPTIONS"};
-    @Value("${spring.profiles.active:prod}")
+    private final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
+
+    @Value("${spring.profiles.active}")
     private String activeProfile;
 
     @Bean
@@ -59,9 +63,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        logger.info("Cors configuration starting...");
 
         if ("dev".equalsIgnoreCase(activeProfile)) {
-            config.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:5173"));
+            logger.info("Cors configuration active: dev");
+            logger.info("Setting allowed methods: " + Arrays.toString(allowedMethods));
+            config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+            logger.info("Setting allowed Origins " + config.getAllowedOrigins().toString());
         } else {
             //TODO agregar dominio prod
             config.setAllowedOrigins(List.of("https://***************"));
