@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:8080/api/v1";
+import { getAuthToken } from "./authService.js";
+
+const BASE_URL = "http://localhost:8080/api";
 
 export async function apiFetch(endpoint, method = "GET", data = null) {
   const url = `${BASE_URL}${endpoint}`;
@@ -9,6 +11,12 @@ export async function apiFetch(endpoint, method = "GET", data = null) {
       "Content-Type": "application/json",
     },
   };
+
+  const token = getAuthToken();
+
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
 
   if (data) {
     config.body = JSON.stringify(data);
@@ -28,7 +36,7 @@ export async function apiFetch(endpoint, method = "GET", data = null) {
         console.error("Failed to parse error body:", e);
       }
 
-      throw new Error(`API Error al solicitar ${url} (${errorDetail})`);
+      throw new Error(`API Error on requests ${url} (${errorDetail})`);
     }
 
     if (response.status === 204) {
@@ -37,7 +45,7 @@ export async function apiFetch(endpoint, method = "GET", data = null) {
 
     return await response.json();
   } catch (error) {
-    console.error("Error en la función apiFetch:", error.message);
+    console.error("apiFetch function error:", error.message);
     throw error;
   }
 }

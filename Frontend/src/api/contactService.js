@@ -1,30 +1,34 @@
 import { apiFetch } from "./apiFetcher.js";
 
+const GET_ALL_CONTACTS_ENDPOINT = "/contact/getAll";
+const SAVE_CONTACT_ENDPOINT = "/contact/save";
+
+export async function getAllContacts() {
+  try {
+    const contactsArray = await apiFetch(GET_ALL_CONTACTS_ENDPOINT, "GET");
+    return contactsArray;
+  } catch (error) {
+    console.error("Failed to fetch all contacts:", error.message);
+    throw error;
+  }
+}
+
+export async function saveContact(contactData) {
+  try {
+    const response = await apiFetch(SAVE_CONTACT_ENDPOINT, "POST", contactData);
+    return response;
+  } catch (error) {
+    console.error("Failed to save contact:", error.message);
+    throw error;
+  }
+}
+
 export async function getContactsCount() {
   try {
-    const contactsArray = await apiFetch("/contacts", "GET");
-
-    if (Array.isArray(contactsArray)) {
-      return contactsArray.length;
-    }
-
-    if (
-      contactsArray &&
-      typeof contactsArray === "object" &&
-      contactsArray.totalCount !== undefined
-    ) {
-      console.warn(
-        "API returned object with 'totalCount'. Using that property."
-      );
-      return contactsArray.totalCount;
-    }
-
-    console.error(
-      "API response was not an array or did not contain totalCount."
-    );
+    const contactsArray = await getAllContacts();
+    if (Array.isArray(contactsArray)) return contactsArray.length;
     return 0;
   } catch (error) {
-    console.error("Fallo al obtener el conteo de contactos:", error.message);
-    throw error;
+    return 0;
   }
 }
