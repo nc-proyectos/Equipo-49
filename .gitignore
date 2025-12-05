@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -22,3 +23,42 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+=======
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs / editores
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# --- Backend (Java / Maven / Gradle) ---
+Backend/NC49_SmartCRM/target/
+Backend/NC49_SmartCRM/.gradle/
+Backend/NC49_SmartCRM/build/
+Backend/NC49_SmartCRM/out/
+**/target/
+# --- Frontend (Node / React / Angular) ---
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+/frontend/.next/
+/frontend/.nuxt/
+/frontend/.angular/
+
+/backend/worker-node/node_modules/
+
+# --- General ---
+*.class
+*.jar
+*.war
+*.ear
+
+# Entornos virtuales o temporales
+tmp/
+.env
+>>>>>>> upstream/develop

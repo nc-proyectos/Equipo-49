@@ -1,0 +1,67 @@
+services:
+  database:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_LOCAL_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_LOCAL_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_LOCAL_DB}
+    ports:
+      - "5433:5432"
+    networks:
+      - smartcrm-net
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  spring:
+    build: ./
+    depends_on:
+      - database
+    environment:
+      WORKER_BASE_URL: "http://worker-api:3000"
+    env_file:
+      - .env
+    ports:
+      - "8080:8090"
+    networks:
+      - smartcrm-net
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - smartcrm-net
+
+  worker-api:
+    build: ../worker-node
+    command: [ "node", "src/app.js" ]
+    environment:
+      REDIS_HOST: redis
+      SPRING_BASE_URL: http://spring:8090
+    depends_on:
+      - redis
+      - spring
+    networks:
+      - smartcrm-net
+
+  worker-processor:
+    build: ../worker-node
+    command: [ "node", "src/worker.js" ]
+    environment:
+      REDIS_HOST: redis
+      SPRING_BASE_URL: http://spring:8090
+    depends_on:
+      - redis
+      - spring
+    networks:
+      - smartcrm-net
+
+volumes:
+  db_data:
+  redis-data:
+
+networks:
+  smartcrm-net:
+    driver: bridge
