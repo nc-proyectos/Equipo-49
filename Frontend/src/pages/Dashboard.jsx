@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  );
-}
-
-export default Dashboard;
-=======
 import PeopleIcon from '@mui/icons-material/People';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
@@ -220,4 +207,3 @@ export default function Dashboard() {
     </>
   )
 }
->>>>>>> origin/ramaDeLautaro

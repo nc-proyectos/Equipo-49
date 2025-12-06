@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPendingTasks } from "../api/taskService";
@@ -82,14 +82,4 @@ const Recordatorios = () => {
 };
 
 export default Recordatorios;
-=======
-import React from 'react'
 
-const Recordatorios = () => {
-  return (
-    <div>Recordatorios</div>
-  )
-}
-
-export default Recordatorios
->>>>>>> origin/ramaDeLautaro

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllContacts } from "../api/contactService";
@@ -97,14 +96,4 @@ const Contactos = () => {
 };
 
 export default Contactos;
-=======
-import React from 'react'
 
-const Contactos = () => {
-  return (
-    <div>Contactos</div>
-  )
-}
-
-export default Contactos
->>>>>>> origin/ramaDeLautaro
