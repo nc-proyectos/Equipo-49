@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 
 function Whatsapp() {
@@ -12,3 +13,14 @@ function Whatsapp() {
 }
 
 export default Whatsapp;
+=======
+import React from 'react'
+
+function Whatsapp() {
+  return (
+    <div>Whatsapp</div>
+  )
+}
+
+export default Whatsapp
+>>>>>>> origin/ramaDeLautaro

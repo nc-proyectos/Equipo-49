@@ -1,0 +1,25 @@
+/* Fondo del sidebar */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background-color: #E5E7EB;
+}
+
+/* Estilo general de links */
+.sidebar .nav-link {
+  color: #374151;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+/* Hover */
+.sidebar .nav-link:hover {
+  background-color: #d1d5db;
+  color: #111827;
+}
+
+/* LINK ACTIVO */
+.sidebar .nav-link.active {
+  background-color: #6366F1 !important;
+  color: white !important;
+}
