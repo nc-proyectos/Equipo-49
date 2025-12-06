@@ -1,4 +1,5 @@
 import React from "react";
+import Chat from "../components/Chat/Chat"
 
 function Whatsapp() {
   return (
@@ -6,6 +7,7 @@ function Whatsapp() {
       <h2>Whatsapp</h2>
       <div className="placeholder-content">
         <p>... aca va el componente de integracion de whatsapp ...</p>
+        <Chat/>
       </div>
     </div>
   );
