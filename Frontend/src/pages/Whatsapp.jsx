@@ -1,12 +1,13 @@
 import React from "react";
 import Chat from "../components/Chat/Chat"
 
+
 function Whatsapp() {
   return (
-    <div style={{ padding: "2rem" }}>
+    <div className="page-container" style={{ padding: "2rem" }}>
       <h2>Whatsapp</h2>
       <div className="placeholder-content">
-        <p>... aca va el componente de integracion de whatsapp ...</p>
+     
         <Chat/>
       </div>
     </div>

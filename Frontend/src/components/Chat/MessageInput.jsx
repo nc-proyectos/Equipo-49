@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { sendMessage } from "../../api/whatsappApi";
+import "../Chat/chat.css"
 
 export default function MessageInput({ onSend }) {
   const [value, setValue] = useState("");
@@ -15,20 +16,17 @@ export default function MessageInput({ onSend }) {
   };
 
   return (
-    <div className="p-3 bg-white border-top">
-      <div className="d-flex gap-3 align-items-end">
+     <div className="chat-input-container">
+      <div className="chat-input-wrapper">
         <textarea
-          className="form-control"
+          className="chat-textarea"
           rows="2"
           placeholder="Escribe un mensaje..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
 
-        <button
-          className="btn btn-primary px-4"
-          onClick={handleSend}
-        >
+        <button className="chat-send-btn" onClick={handleSend}>
           Enviar
         </button>
       </div>

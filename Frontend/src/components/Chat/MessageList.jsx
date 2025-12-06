@@ -1,20 +1,17 @@
+import "../Chat/chat.css"
+
 export default function MessageList({ messages }) {
   return (
-    <div className="flex-grow-1 p-3 overflow-auto bg-light">
+   <div className="chat-body">
       {messages.map((msg) => (
         <div
           key={msg.id}
-          className={`d-flex mb-2 ${
-            msg.fromMe ? "justify-content-end" : "justify-content-start"
-          }`}
+          className={`message-row ${msg.fromMe ? "me" : "other"}`}
         >
           <div
-            className={`p-2 rounded ${
-              msg.fromMe
-                ? "bg-primary text-white"
-                : "bg-white border"
+            className={`message-bubble ${
+              msg.fromMe ? "me" : "other"
             }`}
-            style={{ maxWidth: "70%" }}
           >
             {msg.text}
           </div>
