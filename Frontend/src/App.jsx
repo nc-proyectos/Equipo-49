@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Contactos from "./pages/Contactos";
 import NuevoContacto from "./pages/NuevoContacto";
 import Whatsapp from "./pages/Whatsapp";
-import Correos from "./pages/Correos";
+import Correos from "./pages/correo/Correos";
 import Segmentacion from "./pages/Segmentacion";
 import Recordatorios from "./pages/Recordatorios";
 import NuevaTarea from "./pages/NuevaTarea";
