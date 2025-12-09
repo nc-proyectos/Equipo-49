@@ -26,36 +26,15 @@ import java.util.logging.Logger;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
-    private final AuthenticationProvider authenticationProvider;
-    private final String[] allowedMethods = new String[]{"GET", "POST", "PUT", "DELETE", "OPTIONS"};
-    private final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
-
-    @Value("${spring.profiles.active}")
-    private String activeProfile;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/test/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/internal/task/**").permitAll()
-                        .requestMatchers("/ws/notifications/**").permitAll()
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()   // PERMITIR TODO
                 )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -63,21 +42,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        logger.info("Cors configuration starting...");
 
-        if ("dev".equalsIgnoreCase(activeProfile)) {
-            logger.info("Cors configuration active: dev");
-            logger.info("Setting allowed methods: " + Arrays.toString(allowedMethods));
-            config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
-            logger.info("Setting allowed Origins " + config.getAllowedOrigins().toString());
-        } else {
-            //TODO agregar dominio prod
-            config.setAllowedOrigins(List.of("https://***************"));
-        }
+        config.setAllowedOriginPatterns(List.of("*"));
 
-        config.setAllowedMethods(List.of(allowedMethods));
+        config.setAllowedMethods(List.of("*"));
+
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+
+        config.setAllowCredentials(false);
+
         config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
